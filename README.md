@@ -80,6 +80,46 @@ re-approve them and the following session re-runs bootstrap on the new version.
 If anything looks pending or degraded, `npx lazycodex-ai doctor` explains what
 and why. Full details: [lazycodex.ai/docs](https://lazycodex.ai/docs).
 
+### Temporary GPT-5.6 fork hotfix
+
+This fork contains two GPT-5.6 updates:
+
+- a temporary fix for
+  [issue #125](https://github.com/code-yeongyu/lazycodex/issues/125), and
+- Luna-first lightweight routing: `quick`, `explore`, and `librarian` use
+  `gpt-5.6-luna` with low reasoning effort instead of GPT-5.4 mini routes.
+
+It is based on official LazyCodex `4.17.0` and identifies itself as
+`4.17.1-gpt56.1`. The root `lazycodex-ai` npm installer is unchanged; these
+changes are distributed only through the Codex marketplace.
+
+If a user gives an agent `https://github.com/Kitsunetic/lazycodex` and asks to
+update LazyCodex, the agent should perform the following workflow instead of
+only describing it:
+
+1. Run `codex plugin marketplace list` and inspect the current
+   `sisyphuslabs` source.
+2. If `sisyphuslabs` already exists, run
+   `codex plugin marketplace remove sisyphuslabs`.
+3. Run
+   `codex plugin marketplace add https://github.com/Kitsunetic/lazycodex --ref main`.
+4. Run `codex plugin add omo@sisyphuslabs`, then
+   `codex plugin marketplace upgrade sisyphuslabs`.
+5. Run `codex plugin list --marketplace sisyphuslabs --json` and verify that
+   `omo@sisyphuslabs` reports `4.17.1-gpt56.1`.
+6. Run `npx lazycodex-ai doctor` and tell the user to restart Codex and
+   re-approve hooks shown as **Modified**.
+
+Return to the official marketplace only after issue #125 is included in an
+official LazyCodex release. Use the same workflow, replacing the marketplace
+source with `https://github.com/code-yeongyu/lazycodex`, then refresh
+`omo@sisyphuslabs`, verify that the reported version is an official stable
+version, run the doctor, restart Codex, and re-approve the modified hooks. Do
+not switch back merely because a newer official version number exists; first
+confirm that its release contains the GPT-5.6 PostCompact fix. Switching back
+also restores the official model-routing policy unless the official release has
+adopted equivalent Luna-first lightweight routing.
+
 ### Verify it worked
 
 ```bash

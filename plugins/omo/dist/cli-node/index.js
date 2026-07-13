@@ -9257,7 +9257,7 @@ var init_agent_model_requirements = __esm(() => {
     },
     librarian: {
       fallbackChain: [
-        { providers: ["openai"], model: "gpt-5.4-mini-fast" },
+        { providers: ["openai"], model: "gpt-5.6-luna", variant: "low" },
         { providers: ["opencode-go", "bailian-coding-plan"], model: "qwen3.5-plus" },
         { providers: ["vercel"], model: "minimax-m2.7-highspeed" },
         { providers: ["opencode-go", "vercel"], model: "minimax-m3" },
@@ -9269,7 +9269,7 @@ var init_agent_model_requirements = __esm(() => {
     },
     explore: {
       fallbackChain: [
-        { providers: ["openai"], model: "gpt-5.4-mini-fast" },
+        { providers: ["openai"], model: "gpt-5.6-luna", variant: "low" },
         { providers: ["opencode-go", "bailian-coding-plan"], model: "qwen3.5-plus" },
         { providers: ["vercel"], model: "minimax-m2.7-highspeed" },
         { providers: ["opencode-go", "vercel"], model: "minimax-m3" },
@@ -9481,7 +9481,8 @@ var init_category_model_requirements = __esm(() => {
       fallbackChain: [
         {
           providers: ["openai", "github-copilot", "opencode", "vercel"],
-          model: "gpt-5.4-mini"
+          model: "gpt-5.6-luna",
+          variant: "low"
         },
         {
           providers: ["anthropic", "github-copilot", "vercel"],
@@ -11008,7 +11009,7 @@ Approach:
 </Category_Context>
 
 <Caller_Warning>
-THIS CATEGORY USES A SMALLER/FASTER MODEL (gpt-5.4-mini).
+THIS CATEGORY USES A LIGHTWEIGHT MODEL (gpt-5.6-luna).
 
 The model executing this task is optimized for speed over depth. Your prompt MUST be:
 
@@ -11081,7 +11082,7 @@ var init_openai_categories = __esm(() => {
     },
     {
       name: "quick",
-      config: { model: "openai/gpt-5.4-mini" },
+      config: { model: "openai/gpt-5.6-luna", variant: "low" },
       description: "Trivial tasks - single file changes, typo fixes, simple modifications",
       promptAppend: QUICK_CATEGORY_PROMPT_APPEND
     },
@@ -65931,12 +65932,12 @@ function applyOpenAiOnlyModelCatalog(config) {
 var OPENAI_ONLY_AGENT_OVERRIDES, OPENAI_ONLY_CATEGORY_OVERRIDES;
 var init_openai_only_model_catalog = __esm(() => {
   OPENAI_ONLY_AGENT_OVERRIDES = {
-    explore: { model: "openai/gpt-5.4-mini-fast" },
-    librarian: { model: "openai/gpt-5.4-mini-fast" }
+    explore: { model: "openai/gpt-5.6-luna", variant: "low" },
+    librarian: { model: "openai/gpt-5.6-luna", variant: "low" }
   };
   OPENAI_ONLY_CATEGORY_OVERRIDES = {
     artistry: { model: "openai/gpt-5.5", variant: "xhigh" },
-    quick: { model: "openai/gpt-5.4-mini" },
+    quick: { model: "openai/gpt-5.6-luna", variant: "low" },
     "visual-engineering": { model: "openai/gpt-5.5", variant: "high" },
     writing: { model: "openai/gpt-5.5", variant: "medium" }
   };
@@ -66134,7 +66135,7 @@ function generateModelConfig(config) {
     if (role === "explore") {
       let agentConfig;
       if (avail.native.openai) {
-        agentConfig = { model: "openai/gpt-5.4-mini-fast" };
+        agentConfig = { model: "openai/gpt-5.6-luna", variant: "low" };
       } else if (avail.native.claude) {
         agentConfig = { model: "anthropic/claude-haiku-4-5" };
       } else if (avail.opencodeZen) {
@@ -74134,7 +74135,7 @@ function formatConfigSummary(config) {
   lines.push("");
   const claudeDetail = config.hasClaude ? config.isMax20 ? "max20" : "standard" : undefined;
   lines.push(formatProvider("Claude", config.hasClaude, claudeDetail));
-  lines.push(formatProvider("OpenAI/ChatGPT", config.hasOpenAI, "GPT-5.4 for Oracle"));
+  lines.push(formatProvider("OpenAI/ChatGPT", config.hasOpenAI, "GPT-5.6 family with Luna for lightweight tasks"));
   lines.push(formatProvider("Gemini", config.hasGemini));
   lines.push(formatProvider("GitHub Copilot", config.hasCopilot, "fallback"));
   lines.push(formatProvider("OpenCode Zen", config.hasOpencodeZen, "opencode/ models"));
@@ -80826,7 +80827,7 @@ async function promptInstallConfig(detected, platform, codexAutonomousOverride) 
     message: "Do you have an OpenAI/ChatGPT Plus subscription?",
     options: [
       { value: "no", label: "No", hint: "Oracle will use fallback models" },
-      { value: "yes", label: "Yes", hint: "GPT-5.4 for Oracle (high-IQ debugging)" }
+      { value: "yes", label: "Yes", hint: "GPT-5.6 family with Luna for lightweight tasks" }
     ],
     initialValue: initial.openai
   });
@@ -103489,7 +103490,7 @@ Examples:
 
 Model Providers (Priority: Native > Copilot > OpenCode Zen > Z.ai > Kimi > Bailian > MiniMax > Vercel):
   Claude        Native anthropic/ models (Opus, Sonnet, Haiku)
-  OpenAI        Native openai/ models (GPT-5.4 for Oracle)
+  OpenAI        Native openai/ models (GPT-5.6 family with Luna for lightweight tasks)
   Gemini        Native google/ models (Gemini 3.1 Pro, Flash)
   Copilot       github-copilot/ models (fallback)
   OpenCode Zen  opencode/ models (opencode/claude-opus-4-7, etc.)
