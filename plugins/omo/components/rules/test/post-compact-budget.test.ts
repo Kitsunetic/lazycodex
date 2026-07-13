@@ -1,10 +1,9 @@
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
-
-import { withPostCompactBudget } from "../src/post-compact-budget.js";
 import type { PiRulesConfig } from "@oh-my-opencode/rules-engine/engine";
+import { afterEach, describe, expect, it } from "vitest";
+import { withPostCompactBudget } from "../src/post-compact-budget.js";
 
 const tempDirectories: string[] = [];
 const CONFIG: PiRulesConfig = {
@@ -38,6 +37,22 @@ describe("post-compact context budget", () => {
 		// then
 		expect(budget.maxResultChars).toBeLessThan(1_000);
 		expect(budget.maxRuleChars).toBeLessThanOrEqual(budget.maxResultChars);
+	});
+
+	it.each([
+		"gpt-5.6-sol",
+		"gpt-5.6-terra",
+		"gpt-5.6-luna",
+	])("#given GPT-5.6 model %s #when resolving a large post-compact transcript #then uses the 372K context window", (model) => {
+		// given
+		const transcriptPath = writeCompactedTranscript("A".repeat(990_000));
+
+		// when
+		const budget = withPostCompactBudget(CONFIG, { model, transcriptPath });
+
+		// then
+		expect(budget.maxRuleChars).toBe(11_450);
+		expect(budget.maxResultChars).toBe(11_450);
 	});
 
 	it("#given unknown model near its context window #when resolving post-compact budget #then shrinks projected rule injection conservatively", () => {
